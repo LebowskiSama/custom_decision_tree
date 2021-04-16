@@ -41,3 +41,49 @@ class Node:
 
         # Sorting counts and saving final prediction
         counts_sorted = list(sorted(self.counts.items(), key=lambda item: item[1]))
+
+        # Get most repeated class
+        yhat = None
+        if len(counts_sorted) > 0:
+            yhat = counts_sorted[-1][0]
+
+        # Saving to object, predict class with most frequency
+        self.yhat = yhat
+
+        # Save number of observations in node
+        self.n = len(Y)
+
+        # Set left and right nodes as empty
+        self.left = None
+        self.right = None
+
+        # Default splits
+        self.best_feature = None
+        self.best_value = None
+
+        @staticmethod
+        def GINI_impurity(y1_count: int, y2_count: int) -> float:
+            """
+            Calculate GINI impurity for a given observation belonging to a binary class
+            """
+            # Count check
+            if y1_count is None:
+                y1_count = 0
+            if y2_count is None:
+                y2_count = 0
+
+            # Getting total obs
+            n = y1_count + y2_count
+
+            # If n is 0 then the lowest possible gini impurity is returned 0.0
+            if n == 0:
+                return 0.0
+
+            # Get probability pertaining to each class
+            # Observation / total number of observations
+            p1 = y1_count / n
+            p2 = y2_count / n
+
+            # Return GINI score
+            return 1 - (p1 ** 2 + p2 ** 2)
+
